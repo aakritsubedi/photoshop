@@ -9,7 +9,6 @@ import DEFAULT_OPTIONS from "constants/defaultOptions";
 import "assets/css/App.css";
 
 function App() {
-  const [image, setImage] = useState(null);
   const [options, setOptions] = useState(DEFAULT_OPTIONS);
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
   const selectedOptions = options[selectedOptionIndex];
@@ -18,24 +17,38 @@ function App() {
     setSelectedOptionIndex(index);
   };
 
-  const uploadImage = (e) => {
-    console.log(e.target);
-    setImage(e.target.value);
+  const handleChange = ({ target }) => {
+    setOptions((prevOptions) => {
+      return prevOptions.map((option, index) => {
+        if (index !== selectedOptionIndex) return option;
+
+        return { ...option, value: target.value };
+      });
+    });
   };
+ 
+  const getImageStyle = () => {
+    const filters = options.map(option => {
+      return `${option.property}(${option.value}${option.unit})`
+    })
+
+    return { filter: filters.join(' ') }
+  }
 
   return (
     <div className="container">
-      {image !== null ? (
-        <PhotoOutput image={image} />
-      ) : (
-        <input type="file" onChange={(e) => uploadImage(e)} />
-      )}
+      <PhotoOutput style={getImageStyle()} />
       <Sidebar
         options={options}
         selectedOptionIndex={selectedOptionIndex}
         handleClick={handleClick}
       />
-      <Slider />
+      <Slider
+        min={selectedOptions.range.min}
+        max={selectedOptions.range.max}
+        value={selectedOptions.value}
+        handleChange={handleChange}
+      />
     </div>
   );
 }
