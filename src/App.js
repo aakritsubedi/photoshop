@@ -10,6 +10,7 @@ import "assets/css/App.css";
 
 function App() {
   const [options, setOptions] = useState(DEFAULT_OPTIONS);
+  const [image, setImage] = useState("");
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
   const selectedOptions = options[selectedOptionIndex];
 
@@ -26,18 +27,31 @@ function App() {
       });
     });
   };
- 
-  const getImageStyle = () => {
-    const filters = options.map(option => {
-      return `${option.property}(${option.value}${option.unit})`
-    })
 
-    return { filter: filters.join(' ') }
-  }
+  const getImageStyle = () => {
+    const filters = options.map((option) => {
+      return `${option.property}(${option.value}${option.unit})`;
+    });
+
+    return { filter: filters.join(" ") };
+  };
+
+  const getImage = (e) => {
+    setImage(URL.createObjectURL(e.target.files[0]));
+  };
 
   return (
     <div className="container">
-      <PhotoOutput style={getImageStyle()} />
+      <div className='img-uploader'>
+        <b>Upload Image</b>
+        <input
+          type="file"
+          onChange={getImage}
+          id="uploader"
+          accept="image/*"
+        />
+      </div>
+      <PhotoOutput style={getImageStyle()} image={image} />
       <Sidebar
         options={options}
         selectedOptionIndex={selectedOptionIndex}

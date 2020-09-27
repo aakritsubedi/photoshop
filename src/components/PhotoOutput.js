@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 function PhotoOutput({ image, style }) {
-  // image = 'static/media/MyFavourites.cd17c76d.jpg';
-  return <div className="main-image" style={style}></div>;
+  const setImgBg = () => {
+    document.getElementById('main-img').style.backgroundImage =  `url(${image})`;
+  }
+
+  useEffect(() => {
+    setImgBg();
+  })
+
+  return <div className="main-image" id='main-img' style={style}></div>;
 }
 
 export default PhotoOutput;
